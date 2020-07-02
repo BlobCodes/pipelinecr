@@ -19,11 +19,12 @@ abstract class PipelineCR::Stage(T, U)
               sendout.each {|sendpkg| output.send(sendpkg)}
             end
           rescue ex
-            on_error(ex)
+            on_error(pkg.unsafe_as(T), ex)
             output.send PipelineCR::PackageAmountChanged.new(-1)
           end
         rescue Channel::ClosedError
           output.close unless output.closed?
+          on_close()
           break
         end
       end
@@ -36,9 +37,11 @@ abstract class PipelineCR::Stage(T, U)
     PipelineCR::Processor(T, U).new(ret)
   end
 
-  def on_error(ex : Exception)
+  def on_error(pkg : T, ex : Exception)
     puts ex
   end
+
+  def on_close(); end
 
   abstract def task(pkg : T) : U | Enumerable(U)
 end

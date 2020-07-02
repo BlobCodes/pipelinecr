@@ -40,8 +40,13 @@ class SplittingStage < PipelineCR::Stage(HTTP::Client::Response, String)
   end
 
   # You can even change the error handling behaviour
-  def on_error(ex : Exception)
+  def on_error(pkg : HTTP::Client::Response, ex : Exception)
     puts ex
+  end
+
+  # You can clean up after you're finished with processing
+  def on_close()
+    puts "Stopped a SplittingStage worker."
   end
 end
 
