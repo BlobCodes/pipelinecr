@@ -1,6 +1,8 @@
 name: pipelinecr
 version: 0.2.0
 
+description: Pipelines are a simple way to efficiently parallelize workloads consisting of multiple asynchronous subtasks.
+
 authors:
   - BlobCodes <davidkeller@tuta.io>
 
