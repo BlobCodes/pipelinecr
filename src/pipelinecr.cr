@@ -1,7 +1,7 @@
 require "./pipelinecr/*"
 
 module PipelineCR
-  VERSION = "0.1.0"
+  VERSION = "0.2.0"
 
   def self.>>(pipeable : PipelineCR::Pipeable(T, U)) : PipelineCR::Pipeline(T, U) forall T, U
     input = Channel(T | PipelineCR::PackageAmountChanged).new

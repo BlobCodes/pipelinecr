@@ -1,5 +1,7 @@
 # PipelineCR
 
+![https://BlobCodes.gitlab.io/pipelinecr](https://img.shields.io/badge/docs-available-brightgreen.svg) ![https://gitlab.com/BlobCodes/pipelinecr/pipelines](https://gitlab.com/BlobCodes/pipelinecr/badges/master/pipeline.svg) ![https://gitlab.com/BlobCodes/pipelinecr/-/releases/0.2.0](https://img.shields.io/badge/release-v0.2.0-blue.svg)
+
 Pipelines are a simple way to efficiently parallelize workloads consisting of multiple asynchronous subtasks.
 
 ## Installation
@@ -9,7 +11,7 @@ Pipelines are a simple way to efficiently parallelize workloads consisting of mu
    ```yaml
    dependencies:
      pipelinecr:
-       github: blobcodes/pipelinecr
+       gitlab: blobcodes/pipelinecr
    ```
 
 2. Run `shards install`
