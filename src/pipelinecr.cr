@@ -1,23 +1,15 @@
-# PipelineCR
+require "./pipelinecr/*"
 
-Pipelines are a simple way to efficiently parallelize workloads consisting of multiple asynchronous subtasks.
+module PipelineCR
+  VERSION = "0.1.0"
 
-## Installation
-
-1. Add the dependency to your `shard.yml`:
-   
-   ```yaml
-   dependencies:
-     pipelinecr:
-       github: blobcodes/pipelinecr
-   ```
-
-2. Run `shards install`
-
-## Usage
-
-```crystal
-require "pipelinecr"
+  def self.>>(processor : PipelineCR::Processor(T,U)) : PipelineCR::Pipeline(T, U) forall T,U
+    input = Channel(T | PipelineCR::PackageAmountChanged).new()
+    output = Channel(U | PipelineCR::PackageAmountChanged).new()
+    processor.start(input, output)
+    PipelineCR::Pipeline(T, U).new(input, output)
+  end
+end
 
 # Define multiple pipeline stages
 require "http/client"
@@ -61,22 +53,36 @@ puts pipeline.flush(packages) # Processes all packages and returns an array with
 pipeline.process_each(packages) do |pkg| # Yields each finished package until all packages are finished
   puts pkg
 end
-```
 
-Please keep in mind that the pipeline can only process one set of packages at a time. You cannot use multiple fibers to process multiple fibers
 
-## Development
+# require "http/client"
+# class DownloadStage < PipelineCR::Stage(String, String)
+#   def initialize()
+#     # Here you can define important instance-variables, which is not needed in this case
+#   end
 
-TODO: Write development instructions here
+#   def task(pkg : String) : String
+#     puts "Downloading #{pkg}"
+#     HTTP::Client.get(pkg).body
+#   end
+# end
 
-## Contributing
+# class CountStage < PipelineCR::Stage(String, Int32)
+#   def initialize()
+#     # Here you can define important instance-variables, which is not needed in this case
+#   end
 
-1. Fork it (<https://github.com/blobcodes/pipelinecr/fork>)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+#   def task(pkg : String) : Int32
+#     pkg.size
+#   end
+# end
 
-## Contributors
+# pipeline = PipelineCR >> DownloadStage*4 >> CountStage*1
 
-- [BlobCodes](https://github.com/blobcodes) - creator and maintainer
+# packages = [
+#   "https://duckduckgo.com",
+#   "https://google.com",
+#   "https://amazon.de",
+# ]*4
+
+# puts pipeline.flush(packages)

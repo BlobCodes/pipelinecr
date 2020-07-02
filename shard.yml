@@ -1,0 +1,9 @@
+name: pipelinecr
+version: 0.1.0
+
+authors:
+  - BlobCodes <davidkeller@tuta.io>
+
+crystal: 0.35.1
+
+license: MIT
