@@ -1,6 +1,6 @@
 # PipelineCR
 
-![https://BlobCodes.gitlab.io/pipelinecr](https://img.shields.io/badge/docs-available-brightgreen.svg) ![https://gitlab.com/BlobCodes/pipelinecr/pipelines](https://gitlab.com/BlobCodes/pipelinecr/badges/master/pipeline.svg) ![https://gitlab.com/BlobCodes/pipelinecr/-/releases/0.2.0](https://img.shields.io/badge/release-v0.2.0-blue.svg)
+[![Docs available](https://img.shields.io/badge/docs-available-brightgreen.svg)](https://BlobCodes.gitlab.io/pipelinecr) [![Pipeline](https://gitlab.com/BlobCodes/pipelinecr/badges/master/pipeline.svg)](https://gitlab.com/BlobCodes/pipelinecr/pipelines) [![Release 0.2.0](https://img.shields.io/badge/release-v0.2.0-blue.svg)](https://gitlab.com/BlobCodes/pipelinecr/-/releases/0.2.0)
 
 Pipelines are a simple way to efficiently parallelize workloads consisting of multiple asynchronous subtasks.
 
