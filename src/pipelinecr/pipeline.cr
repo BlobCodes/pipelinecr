@@ -5,7 +5,7 @@
 # pipeline = PipelineCR >> MultiplyByTwoStage*4 >> MultiplyByTwoStage*1
 # packages = [9, 4, 6, 2]
 # finished = pipeline.flush(packages) => [36, 16, 24, 8] (Maybe in different order)
-# pipeline.process_each(packages) {|pkg| puts pkg} => 3616248
+# pipeline.process_each(packages) {|pkg| puts pkg} => 3616248 (Maybe in different order)
 # ```
 class PipelineCR::Pipeline(T, U)
   VERSION = "0.1.0"
@@ -16,9 +16,9 @@ class PipelineCR::Pipeline(T, U)
   def initialize(@input : Channel(T | PipelineCR::PackageAmountChanged), @output : Channel(U | PipelineCR::PackageAmountChanged))
   end
 
-  def >>(pro : Processor(U, V)) : PipelineCR::Pipeline forall V
+  def >>(pipeable : Pipeable(U, V)) : PipelineCR::Pipeline forall V
     output = Channel(V | PipelineCR::PackageAmountChanged).new()
-    pro.start(@output, output)
+    pipeable.start(@output, output)
     PipelineCR::Pipeline(T, V).new(@input, output)
   end
 

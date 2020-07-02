@@ -51,8 +51,8 @@ class SplittingStage < PipelineCR::Stage(HTTP::Client::Response, String)
 end
 
 # Create the pipeline
-# Multiplying a Stage is required and defines how many fibers should work in parallel
-pipeline = PipelineCR >> DownloadStage*4 >> SplittingStage*2
+# Multiplying a Stage defines how many fibers should work in parallel, but you can also initialize a Stage directly
+pipeline = PipelineCR >> DownloadStage*4 >> SplittingStage.new
 
 # Create work
 packages = [

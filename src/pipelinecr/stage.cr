@@ -22,7 +22,7 @@
 #   end
 # end
 # ```
-abstract class PipelineCR::Stage(T, U)
+abstract class PipelineCR::Stage(T, U) < PipelineCR::Pipeable(T, U)
   def initialize; end
 
   def start(input : Channel(T | PipelineCR::PackageAmountChanged), output : Channel(U | PipelineCR::PackageAmountChanged))
@@ -55,7 +55,9 @@ abstract class PipelineCR::Stage(T, U)
     end
   end
 
-  def self.*(amount : Number)
+  def self.*(amount : Int32)
+    raise "Cannot create zero workers!" if amount == 0
+    return self.new() if amount == 1
     ret = Array(PipelineCR::Stage(T, U)).new(amount)
     amount.times { ret << self.new() }
     PipelineCR::Processor(T, U).new(ret)

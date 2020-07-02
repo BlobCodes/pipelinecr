@@ -1,5 +1,5 @@
-# A wrapper around multiple stages processing the same thing to enable easy parallelism
-class PipelineCR::Processor(T, U)
+# A wrapper around multiple stages processing the same thing to enable easy parallelism, created by multiplying a Stage with a number
+class PipelineCR::Processor(T, U) < PipelineCR::Pipeable(T, U)
   @stages : Array(Stage(T, U))
 
   def initialize(@stages : Array(Stage(T, U)))
