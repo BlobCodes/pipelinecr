@@ -3,7 +3,7 @@
 # Example of a Stage:
 # ```
 # class DownloadStage < Pipeline::Stage(URI, String)
-#   def initialize()
+#   def initialize
 #     # Here you can define important instance-variables
 #   end
 #
@@ -17,7 +17,7 @@
 #   end
 #
 #   # You can clean up after you're finished with processing
-#   def on_close()
+#   def on_close
 #     puts "Stopped a DownloadStage worker."
 #   end
 # end
@@ -39,12 +39,13 @@ abstract class PipelineCR::Stage(T, U) < PipelineCR::Pipeable(T, U)
             when .is_a? U
               output.send sendout
             when .is_a? Enumerable(U)
-              output.send PipelineCR::PackageAmountChanged.new(sendout.size-1)
-              sendout.each {|sendpkg| output.send(sendpkg)}
+              output.send PipelineCR::PackageAmountChanged.new(sendout.size - 1)
+              Fiber.yield # Decrease the risk of the PackageAmountChanged Package coming too late
+              sendout.each { |sendpkg| output.send(sendpkg) }
             end
           rescue ex
-            on_error(pkg.unsafe_as(T), ex)
             output.send PipelineCR::PackageAmountChanged.new(-1)
+            on_error(pkg.unsafe_as(T), ex)
           end
         rescue Channel::ClosedError
           output.close unless output.closed?
@@ -57,9 +58,9 @@ abstract class PipelineCR::Stage(T, U) < PipelineCR::Pipeable(T, U)
 
   def self.*(amount : Int32)
     raise "Cannot create zero workers!" if amount == 0
-    return self.new() if amount == 1
+    return self.new if amount == 1
     ret = Array(PipelineCR::Stage(T, U)).new(amount)
-    amount.times { ret << self.new() }
+    amount.times { ret << self.new }
     PipelineCR::Processor(T, U).new(ret)
   end
 
@@ -67,9 +68,7 @@ abstract class PipelineCR::Stage(T, U) < PipelineCR::Pipeable(T, U)
     puts ex
   end
 
-  def on_close(); end
+  def on_close; end
 
   abstract def task(pkg : T) : U | Enumerable(U)
 end
-
-

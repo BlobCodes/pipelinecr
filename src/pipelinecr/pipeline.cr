@@ -17,7 +17,7 @@ class PipelineCR::Pipeline(T, U)
   end
 
   def >>(pipeable : Pipeable(U, V)) : PipelineCR::Pipeline forall V
-    output = Channel(V | PipelineCR::PackageAmountChanged).new()
+    output = Channel(V | PipelineCR::PackageAmountChanged).new
     pipeable.start(@output, output)
     PipelineCR::Pipeline(T, V).new(@input, output)
   end
@@ -37,7 +37,7 @@ class PipelineCR::Pipeline(T, U)
       end
       return_channel.send(nil)
     end
-    packages.each {|pkg| @input.send(pkg)}
+    packages.each { |pkg| @input.send(pkg) }
     return_channel.receive
     return_channel.close
   end

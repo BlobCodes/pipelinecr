@@ -6,6 +6,6 @@ class PipelineCR::Processor(T, U) < PipelineCR::Pipeable(T, U)
   end
 
   def start(input : Channel(T | PipelineCR::PackageAmountChanged), output : Channel(U | PipelineCR::PackageAmountChanged))
-    @stages.each {|stage| stage.start(input, output)}
+    @stages.each { |stage| stage.start(input, output) }
   end
 end
