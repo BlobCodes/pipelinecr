@@ -1,39 +1,17 @@
 # Pipelines are a simple way to efficiently parallelize workloads consisting of multiple asynchronous subtasks.
 #
 # Example:
-# DownloadStage, ConversionStage and FinalizationStage are the three subtasks that need to run.
 # ```
-# pipeline = |> DownloadStage*4 => ConversionStage*2 => FinalizationStage*1
-#
-# finished = Array(String).new
-# pipeline.each_finished { |pkg| finished << pkg }
-#
-# pipeline.process(stuff)
-# pipeline.process(more_stuff)
-# [...]
-#
-# pipeline.finish
-# puts finished
-# ```
-#
-# Example of a Stage:
-# ```
-# class DownloadStage < Pipeline::Stage(URI, String)
-#   def initialize()
-#     # Here you can define important instance-variables
-#   end
-#
-#   def task(pkg : URI) : String
-#     HTTP::Client.get(pkg).body
-#   end
-# end
+# pipeline = PipelineCR >> MultiplyByTwoStage*4 >> MultiplyByTwoStage*1
+# packages = [9, 4, 6, 2]
+# finished = pipeline.flush(packages) => [36, 16, 24, 8] (Maybe in different order)
+# pipeline.process_each(packages) {|pkg| puts pkg} => 3616248
 # ```
 class PipelineCR::Pipeline(T, U)
   VERSION = "0.1.0"
 
   @input : Channel(T | PipelineCR::PackageAmountChanged)
   @output : Channel(U | PipelineCR::PackageAmountChanged)
-  # @finished = Channel(Nil).new
 
   def initialize(@input : Channel(T | PipelineCR::PackageAmountChanged), @output : Channel(U | PipelineCR::PackageAmountChanged))
   end
@@ -72,12 +50,7 @@ class PipelineCR::Pipeline(T, U)
     ret
   end
 
-  def finished?
-    @finished.closed?
-  end
-
   def abort
     @input.close
-    @finished.close
   end
 end

@@ -1,3 +1,27 @@
+# A task in the pipeline
+#
+# Example of a Stage:
+# ```
+# class DownloadStage < Pipeline::Stage(URI, String)
+#   def initialize()
+#     # Here you can define important instance-variables
+#   end
+#
+#   def task(pkg : URI) : String
+#     HTTP::Client.get(pkg).body
+#   end
+#
+#   # You can even change the error handling behaviour
+#   def on_error(pkg : String, ex : Exception)
+#     puts ex
+#   end
+#
+#   # You can clean up after you're finished with processing
+#   def on_close()
+#     puts "Stopped a DownloadStage worker."
+#   end
+# end
+# ```
 abstract class PipelineCR::Stage(T, U)
   def initialize; end
 

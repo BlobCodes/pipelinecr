@@ -1,3 +1,4 @@
+# A wrapper around multiple stages processing the same thing to enable easy parallelism
 class PipelineCR::Processor(T, U)
   @stages : Array(Stage(T, U))
 
