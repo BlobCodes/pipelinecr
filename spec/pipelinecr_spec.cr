@@ -37,6 +37,7 @@ end
 
 class CountingStage < PipelineCR::Stage(Int32, Nil)
   @@count = 0
+
   def task(pkg : Int32) : Nil
     @@count += pkg
   end
@@ -60,7 +61,7 @@ describe PipelineCR do
         end
         pipe &= CountingStage.new
         pipe >>= PipelineCR.seperate do |pipe|
-          pipe |= {SquareStage*1, ->(pkg : Int32){pkg == 4}}
+          pipe |= {SquareStage*1, ->(pkg : Int32) { pkg == 4 }}
         end
       end
       pipe >>= CleaningStage*2

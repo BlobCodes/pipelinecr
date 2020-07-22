@@ -1,6 +1,5 @@
 # A bridge between two pipeables having different in- and outputs. Used for building sequences.
 class PipelineCR::Bridge(T, U, V) < PipelineCR::Pipeable(T, V)
-
   def initialize(@input : PipelineCR::Pipeable(T, U), @output : PipelineCR::Pipeable(U, V))
   end
 

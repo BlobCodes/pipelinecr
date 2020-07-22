@@ -20,7 +20,7 @@ class PipelineCR::Seperation(T, U) < PipelineCR::Pipeable(T, U)
     end
     spawn do
       while pkg = input.receive
-        chosen = processed.find(fallback) {|entry| entry[0].call(pkg)}
+        chosen = processed.find(fallback) { |entry| entry[0].call(pkg) }
         chosen ? chosen.not_nil![1].send(pkg) : host.send(-1)
       end
     end

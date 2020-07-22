@@ -17,7 +17,7 @@ abstract class PipelineCR::Stage(T, U) < PipelineCR::Pipeable(T, U)
           when .is_a? U
             output.send sendout
           when .is_a? Enumerable(U)
-            host.send(sendout.size-1)
+            host.send(sendout.size - 1)
             sendout.each { |sendpkg| output.send(sendpkg) }
           end
         rescue ex

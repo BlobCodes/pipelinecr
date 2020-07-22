@@ -4,7 +4,7 @@ class PipelineCR::Multiplication(T, U) < PipelineCR::Pipeable(T, U)
   @addition : Int32
 
   def initialize(@pipeables : Array(Pipeable(T, U)))
-    @addition = @pipeables.size-1
+    @addition = @pipeables.size - 1
   end
 
   def run(input : Channel(T), output : Channel(U), host : Channel(Int32))

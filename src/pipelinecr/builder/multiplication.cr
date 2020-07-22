@@ -1,7 +1,7 @@
 struct PipelineCR::Builder::Multiplication(T, U)
   @values = [] of PipelineCR::Pipeable(T, U)
 
-  def initialize()
+  def initialize
   end
 
   def >>(pipeable : PipelineCR::Pipeable(T, U))
@@ -18,7 +18,7 @@ struct PipelineCR::Builder::Multiplication(T, U)
     PipelineCR::Multiplication.new(@values)
   end
 
-  def self.>>(pipeable : PipelineCR::Pipeable(T, U)) forall T,U
+  def self.>>(pipeable : PipelineCR::Pipeable(T, U)) forall T, U
     PipelineCR::Builder::Multiplication(T, U).new >> pipeable
   end
 
