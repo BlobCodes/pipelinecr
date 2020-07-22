@@ -1,6 +1,6 @@
 # PipelineCR
 
-<img title="" src="./img/logo.webp" alt="" width="638"> 
+<img title="" src="https://gitlab.com/BlobCodes/pipelinecr/-/raw/master/img/logo.webp" alt="" width="638"> 
 
 [![Docs available](https://img.shields.io/badge/docs-available-brightgreen.svg)](https://BlobCodes.gitlab.io/pipelinecr) [![Pipeline](https://gitlab.com/BlobCodes/pipelinecr/badges/master/pipeline.svg)](https://gitlab.com/BlobCodes/pipelinecr/pipelines) [![Release 0.3.0](https://img.shields.io/badge/release-v0.3.0-blue.svg)](https://gitlab.com/BlobCodes/pipelinecr/-/releases/0.3.0)
 
@@ -26,7 +26,7 @@ To use the library, you first need to include it.
 require "pipelinecr"
 ```
 
-## <img title="" src="./img/stage.webp" alt="" width="32"> Stages
+## <img title="" src="https://gitlab.com/BlobCodes/pipelinecr/-/raw/master/img/stage.webp" alt="" width="32"> Stages
 
 Stages are basically the workers that process your packages.
 You can use the following template to create a stage: 
@@ -58,7 +58,7 @@ class MyStage < PipelineCR::Stage(InputType, OutputType)
 end
 ```
 
-## <img title="" src="./img/packages.webp" alt="" width="32"> Packages
+## <img title="" src="https://gitlab.com/BlobCodes/pipelinecr/-/raw/master/img/packages.webp" alt="" width="32"> Packages
 
 Packages are instances of the types your Stages are processing. 
 
@@ -66,14 +66,14 @@ When processing packages in stages, you can return multiple packages, which are 
 
 When choosing the package type, there is only one restriction: It can't be Nil, as it is used to check if a Channel has been closed.
 
-## <img title="" src="./img/processor.webp" alt="" width="32" data-align="inline"> Processors
+## <img title="" src="https://gitlab.com/BlobCodes/pipelinecr/-/raw/master/img/processor.webp" alt="" width="32" data-align="inline"> Processors
 
 A processor is a wrapper around multiple stages, each connected via the same channel. You can create it by multiplying a Stage class (ex. `pro = MyStage*4`).
 
 Using processors instead of stages can significantly improve the performance when using multithreading or when dealing with blocking tasks (ex. HTTP, Files, User input), as multiple packages can be processed in parallel.
 Please notice however, that increasing the worker amount is not a silver bullet. Using hundreds of HTTP clients in parallel or crunching numbers in more workers than you got threads won't improve your performance.
 
-## <img src="./img/pipeline.webp" title="" alt="" width="32"> Pipelines
+## <img src="https://gitlab.com/BlobCodes/pipelinecr/-/raw/master/img/pipeline.webp" title="" alt="" width="32"> Pipelines
 
 A pipeline is a wrapper around multiple stages, processors and sub-pipelines. It has exactly one input and one output channel.
 While creating it, a block is used to configure the pipeline.
@@ -147,7 +147,7 @@ When you do not need the pipeline anymore, do not forget to close the pipeline. 
 
 ## Contributing
 
-1. Fork it (<https://gitlab.com/blobcodes/pipelinecr/fork>)
+1. Fork it (<https://gitlab.com/BlobCodes/pipelinecr/-/forks/new>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
