@@ -58,15 +58,6 @@ class MyStage < PipelineCR::Stage(InputType, OutputType)
 end
 ```
 
-In the stage, you have a few helper methods: 
-
-- `loopback(pkg : InputType)`, `loopback(pkgs : Enumerable(InputType))`
-  With these methods, you can send the package/s to the beginning of the stage.
-  When you loopback multiple packages, the packages are distributed across the parallel stages (if you have any).
-  This is helpful when working recursively or when you want to handle errors.
-- `skip` (Only in task() method)
-  Skips the current package.
-
 ## <img title="" src="./img/packages.webp" alt="" width="32"> Packages
 
 Packages are instances of the types your Stages are processing. 
