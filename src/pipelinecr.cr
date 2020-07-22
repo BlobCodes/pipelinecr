@@ -1,12 +1,18 @@
-require "./pipelinecr/*"
+require "./pipelinecr/pipeable"
+require "./pipelinecr/**"
 
 module PipelineCR
-  VERSION = "0.2.0"
+  VERSION = "0.3.0"
 
-  def self.>>(pipeable : PipelineCR::Pipeable(T, U)) : PipelineCR::Pipeline(T, U) forall T, U
-    input = Channel(T | PipelineCR::PackageAmountChanged).new
-    output = Channel(U | PipelineCR::PackageAmountChanged).new
-    pipeable.start(input, output)
-    PipelineCR::Pipeline(T, U).new(input, output)
+  def self.multiply(&block)
+    (yield PipelineCR::Builder::Multiplication).value
+  end
+
+  def self.sequence(&block)
+    yield PipelineCR::Builder::Sequence
+  end
+
+  def self.seperate(&block)
+    (yield PipelineCR::Builder::Seperation).value
   end
 end

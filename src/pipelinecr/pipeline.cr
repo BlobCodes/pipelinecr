@@ -1,56 +1,69 @@
-# Pipelines are a simple way to efficiently parallelize workloads consisting of multiple asynchronous subtasks.
-#
-# Example:
-# ```
-# pipeline = PipelineCR >> MultiplyByTwoStage*4 >> MultiplyByTwoStage*1
-# packages = [9, 4, 6, 2]
-# finished = pipeline.flush(packages) => [36, 16, 24, 8] (Maybe in different order)
-# pipeline.process_each(packages) {|pkg| puts pkg} => 3616248 (Maybe in different order)
-# ```
 class PipelineCR::Pipeline(T, U)
-  VERSION = "0.1.0"
+  @input : Channel(T) = Channel(T).new
+  @output : Channel(U) = Channel(U).new
+  @host : Channel(Int32) = Channel(Int32).new
+  @finish : Channel(Nil) = Channel(Nil).new
+  @finished : Bool = true
+  @receiver : Bool = false
 
-  @input : Channel(T | PipelineCR::PackageAmountChanged)
-  @output : Channel(U | PipelineCR::PackageAmountChanged)
-
-  def initialize(@input : Channel(T | PipelineCR::PackageAmountChanged), @output : Channel(U | PipelineCR::PackageAmountChanged))
+  def initialize(pipeable : Pipeable(T, U))
+    pipeable.run(@input, @output, @host)
   end
 
-  def >>(pipeable : Pipeable(U, V)) : PipelineCR::Pipeline forall V
-    output = Channel(V | PipelineCR::PackageAmountChanged).new
-    pipeable.start(@output, output)
-    PipelineCR::Pipeline(T, V).new(@input, output)
+  def self.build(&block)
+    self.new(yield PipelineCR::Builder::Sequence)
   end
 
-  def process_each(packages : Enumerable(T), &block : U -> Nil)
-    return_channel = Channel(Nil).new
-    in_pipeline = packages.size
+  private def host
+    raise "You need to setup a package receiver first!" unless @receiver
+    @finished = false
     spawn do
-      until in_pipeline == 0
-        pkg = @output.receive
-        if pkg.is_a?(PipelineCR::PackageAmountChanged)
-          in_pipeline += pkg.value
-        else
-          block.call(pkg.unsafe_as(U))
-          in_pipeline -= 1
-        end
+      counter = 0
+      loop do
+        counter += @host.receive
+        break if counter <= 0
       end
-      return_channel.send(nil)
+      @finished = true
+      @finish.send(nil)
     end
+  end
+
+  def <<(package : T)
+    host if @finished
+    @host.send(1)
+    @input.send(T)
+  end
+
+  def <<(packages : Enumerable(T))
+    host if @finished
+    @host.send(packages.size)
     packages.each { |pkg| @input.send(pkg) }
-    return_channel.receive
-    return_channel.close
   end
 
-  def flush(packages : Enumerable(T)) : Array(U)
-    ret = Array(U).new(packages.size)
-    process_each(packages) do |pkg|
-      ret << pkg
-    end
-    ret
-  end
-
-  def abort
+  def close
     @input.close
+    @output.close
+    @host.close
+  end
+
+  def on_receive(&block : U -> Nil)
+    raise "There can't be multiple receivers" if @receiver
+    @receiver = true
+    spawn do
+      until nil == (pkg = @output.receive?)
+        block.call(pkg.not_nil!)
+        @host.send(-1)
+      end
+    end
+  end
+
+  def receiver=(array : Array(U))
+    on_receive do |pkg|
+      array << pkg
+    end
+  end
+
+  def finish
+    @finish.receive
   end
 end

@@ -5,7 +5,7 @@ class PipelineCR::Processor(T, U) < PipelineCR::Pipeable(T, U)
   def initialize(@stages : Array(Stage(T, U)))
   end
 
-  def start(input : Channel(T | PipelineCR::PackageAmountChanged), output : Channel(U | PipelineCR::PackageAmountChanged))
-    @stages.each { |stage| stage.start(input, output) }
+  def run(input : Channel(T), output : Channel(U), host : Channel(Int32))
+    @stages.each { |stage| stage.run(input, output, host) }
   end
 end
