@@ -1,5 +1,3 @@
-image: "crystallang/crystal:latest"
-
 before_script:
   - shards install
 
@@ -7,12 +5,22 @@ cache:
   paths:
   - lib/
 
-spec & format:
+build:latest:
+  image: "crystallang/crystal:latest"
   script:
   - crystal spec
   - crystal tool format --check
+  - shards build
+
+build:nightly:
+  image: "crystallang/crystal:nightly"
+  script:
+  - crystal spec
+  - crystal tool format --check
+  - shards build
 
 pages:
+  image: "crystallang/crystal:latest"
   stage: deploy
   script:
   - crystal docs -o public src/pipelinecr.cr
