@@ -10,14 +10,12 @@ build:latest:
   script:
   - crystal spec
   - crystal tool format --check
-  - shards build
 
 build:nightly:
   image: "crystallang/crystal:nightly"
   script:
   - crystal spec
   - crystal tool format --check
-  - shards build
 
 pages:
   image: "crystallang/crystal:latest"
