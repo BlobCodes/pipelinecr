@@ -31,7 +31,7 @@ class PipelineCR::Pipeline(T, U)
   def <<(package : T)
     host if @finished
     @host.send(1)
-    @input.send(T)
+    @input.send(package)
   end
 
   def <<(packages : Enumerable(T))
