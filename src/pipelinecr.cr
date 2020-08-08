@@ -2,7 +2,7 @@ require "./pipelinecr/pipeable"
 require "./pipelinecr/**"
 
 module PipelineCR
-  VERSION = "0.3.0"
+  VERSION = "0.3.1"
 
   def self.multiply(&block)
     (yield PipelineCR::Builder::Multiplication).value

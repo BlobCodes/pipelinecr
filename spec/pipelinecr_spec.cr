@@ -68,7 +68,8 @@ describe PipelineCR do
     end
 
     pipeline.receiver = (receiver = Array(Int32).new)
-    pipeline << ["4 2 3 7 e", "2 3"]
+    pipeline << ["4 2 3 7 e"]
+    pipeline << "2 3"
     pipeline.finish
     receiver.sort.should eq([4, 4, 4, 4, 6, 6, 8, 8, 8, 9, 9, 14, 16, 16, 18, 18, 32])
 

@@ -1,5 +1,5 @@
 name: pipelinecr
-version: 0.2.0
+version: 0.3.1
 
 description: Pipelines are a simple way to efficiently parallelize workloads consisting of multiple asynchronous subtasks.
 
