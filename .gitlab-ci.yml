@@ -1,10 +1,6 @@
 before_script:
   - shards install
 
-cache:
-  paths:
-  - lib/
-
 build:latest:
   image: "crystallang/crystal:latest"
   script:
