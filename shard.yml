@@ -1,11 +1,11 @@
 name: pipelinecr
-version: 0.3.1
+version: 0.3.2
 
 description: Pipelines are a simple way to efficiently parallelize workloads consisting of multiple asynchronous subtasks.
 
 authors:
   - BlobCodes <davidkeller@tuta.io>
 
-crystal: 0.35.1
+crystal: 1.0.0
 
 license: MIT
